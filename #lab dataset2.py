@@ -46,8 +46,13 @@ lead_canceled_percent = lead_canceled_table.div(lead_canceled_table.sum(axis=1),
 print(lead_canceled_percent)
 
 #step 4 
-highest_canceled_lead_time = lead_canceled_percent.idxmax(axis=1)
-print(highest_canceled_lead_time)
+def highest_cancellation_lead_time(lead_canceled_percent):
+    highest_canceled_lead_time = lead_canceled_percent.idxmax(axis=1)
+    return highest_canceled_lead_time
+highest_canceled_lead_time_result = highest_cancellation_lead_time(lead_canceled_percent)
+print(highest_canceled_lead_time_result)
+
+
 #Analysis 
 #This data indicates that lead times between 0-100 days, 200-300 days, and 700-800 days 
 #likely to not cancel 
@@ -75,13 +80,26 @@ print(meal_counts)
 country_counts = hotel_data.groupby("country").size().reset_index(name="count")
 print(country_counts)
 
-#step 3 
+#step 3
 meal_country_counts = hotel_data.groupby(["country", "meal"]).size().reset_index(name="count")
 print(meal_country_counts)
 total_country_counts = meal_country_counts.groupby("country")["count"].transform("sum")
 meal_country_counts["percentage"] = (meal_country_counts["count"] / total_country_counts) * 100
 print("\nMeal plan percentages within each country:")
 print(meal_country_counts.sort_values(by=["country", "percentage"], ascending=[True, False]).head(20))
+
+
+#step 4 
+def most_common_meal_plan(meal_country_counts):
+    most_common_meal = meal_country_counts.sort_values(by=["country", "percentage"], ascending=[True, False])\
+                                          .drop_duplicates(subset="country", keep="first")\
+                                          [["country", "meal", "percentage"]]
+    return most_common_meal
+
+most_common_meal_plan_result = most_common_meal_plan(meal_country_counts)
+print(most_common_meal_plan_result)
+
+
 
 #Analysis 
 #The data reveals that BB (Bed and Breakfast) is the most popular meal plan across most countries, 
