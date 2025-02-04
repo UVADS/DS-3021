@@ -67,13 +67,16 @@ def calculate_highest_tumor_type(tumor_age_table):
         raise ValueError("Input must be a DataFrame. Ensure 'tumor_age_table' is correctly formatted.")
 
     # Removing rows with all NaN values before performing operations
+    
     tumor_age_table = tumor_age_table.dropna(how="all")
 
     # using tumor_age_percent from previous code step  
     highest_tumor_type = tumor_age_percent.idxmax(axis=1)  
 
     return highest_tumor_type
+#Create a tumor distribution table: count occurrences of each tumor type within each age group
 tumor_age_table = clinical_mod.groupby(["Age Group", "Tumor"]).size().unstack(fill_value=0)
+#checking the function to determine the highest occurring tumor type per age group
 highest_tumor_per_age_group = calculate_highest_tumor_type(tumor_age_table)
 print(highest_tumor_per_age_group)
 
@@ -112,7 +115,7 @@ print(highest_tumor_per_age_group)
 #4-For each stage of tumor, calculate which positive or negative version of the hormone is most 
 #frequent
 
-#step 1 
+#step 1 -seperate ER,PR,HER2 positives and negatives together 
 ER_positive = clinical_mod[clinical_mod["ER Status"] == "Positive"]
 print(ER_positive)
 ER_negative = clinical_mod[clinical_mod["ER Status"] == "Negative"]
@@ -126,34 +129,38 @@ print(HER2_positive)
 HER2_negative = clinical_mod[clinical_mod["HER2 Final Status"] == "Negative"]
 print(HER2_negative)
 
-#step 2 
+#step 2 -for each stage of tumor, count the number of ER,PR, HER positives
+
 ER_positive_counts = ER_positive.groupby("Tumor")["ER Status"].count()
 PR_positive_counts = PR_positive.groupby("Tumor")["PR Status"].count()
 HER2_positive_counts = HER2_positive.groupby("Tumor")["HER2 Final Status"].count()
+# Print the counts for verification
 print(ER_positive_counts,PR_positive_counts,HER2_positive_counts)
-
+# Manually defining  positive counts for tumor stages from printed result
 ER_positive_counts = {"T1": 10, "T2": 39, "T3": 14, "T4": 5}
 PR_positive_counts = {"T1": 10, "T2": 39, "T3": 14, "T4": 5}
 HER2_positive_counts = {"T1": 4, "T2": 19, "T3": 4, "T4": 0}
 
-# Create a DataFrame
+# Creating a DataFrame to store positive counts 
 data1 = {
     "Tumor Stage": ["T1", "T2", "T3", "T4"],
     "ER Positive": [ER_positive_counts.get(stage, 0) for stage in ["T1", "T2", "T3", "T4"]],
     "PR Positive": [PR_positive_counts.get(stage, 0) for stage in ["T1", "T2", "T3", "T4"]],
     "HER2 Positive": [HER2_positive_counts.get(stage, 0) for stage in ["T1", "T2", "T3", "T4"]],
 }
-
+# Converting the dictionary into a DataFrame
 results_df1 = pd.DataFrame(data1)
 
-# Display the table
+# Displaying the table
 print(results_df1)
 
-#step 3 
+#step 3 -for each stage of tumor, count the number of ER,PR, HER negatives 
 
 ER_negative_counts = ER_negative.groupby("Tumor")["ER Status"].count()
 PR_negative_counts = PR_negative.groupby("Tumor")["PR Status"].count()
 HER2_negative_counts = HER2_negative.groupby("Tumor")["HER2 Final Status"].count()
+
+# Print the counts for verification
 print(ER_negative_counts,PR_negative_counts,HER2_negative_counts)
 
 ER_positive_counts = {"T1": 5, "T2": 25, "T3": 5, "T4":1}
@@ -169,14 +176,14 @@ data2 = {
 
 results_df2 = pd.DataFrame(data2)
 
-# Display the table
+# Displaying the table
 print(results_df2)
 
 #step 4
 def compute_most_frequent_hormone(results_df1):
     results_df1 = results_df1.copy()  #ensuring the original dataframe is unmodified 
     results_df1["Most Frequent Hormone"] = results_df1[["ER Positive", "PR Positive", "HER2 Positive"]].apply(
-        lambda row: " & ".join(row.index[row == row.max()]), axis=1
+        lambda row: " & ".join(row.index[row == row.max()]), axis=1 #select the hormone with the highest count 
     )
     return results_df1
 
