@@ -61,8 +61,22 @@ tumor_age_percent = tumor_age_table.div(tumor_age_table.sum(axis=1), axis=0) * 1
 print(tumor_age_percent)
 
 #4-write the highest occuring tumor type for each age group 
-highest_tumor_type = tumor_age_percent.idxmax(axis=1)
-print(highest_tumor_type)
+
+def calculate_highest_tumor_type(tumor_age_table):
+    if not isinstance(tumor_age_table, pd.DataFrame):  # Ensure the input is a DataFrame
+        raise ValueError("Input must be a DataFrame. Ensure 'tumor_age_table' is correctly formatted.")
+
+    # Removing rows with all NaN values before performing operations
+    tumor_age_table = tumor_age_table.dropna(how="all")
+
+    # using tumor_age_percent from previous code step  
+    highest_tumor_type = tumor_age_percent.idxmax(axis=1)  
+
+    return highest_tumor_type
+tumor_age_table = clinical_mod.groupby(["Age Group", "Tumor"]).size().unstack(fill_value=0)
+highest_tumor_per_age_group = calculate_highest_tumor_type(tumor_age_table)
+print(highest_tumor_per_age_group)
+
 
 ### Analysis: It seems like T2 is the most frequently prevalent tumor type 
 #in age groups 30-40 years, 40-50 years, 50-60 years, 60-70 years, and 80-90 years
@@ -159,16 +173,28 @@ results_df2 = pd.DataFrame(data2)
 print(results_df2)
 
 #step 4
-print(results_df1)
-results_df1["Most Frequent Hormone"] = results_df1[["ER Positive", "PR Positive", "HER2 Positive"]].apply(
-    lambda row: " & ".join(row.index[row == row.max()]), axis=1
-)
+def compute_most_frequent_hormone(results_df1):
+    results_df1 = results_df1.copy()  #ensuring the original dataframe is unmodified 
+    results_df1["Most Frequent Hormone"] = results_df1[["ER Positive", "PR Positive", "HER2 Positive"]].apply(
+        lambda row: " & ".join(row.index[row == row.max()]), axis=1
+    )
+    return results_df1
 
-# Display the updated DataFrame
-print(results_df1)
+# Running the function using results_df1
+final_results_df1 = compute_most_frequent_hormone(results_df1)
+# Displaying results
+print(final_results_df1)
+
+
+
 
 #Analysis- The results show that the most frequent hormone receptors  for all 4 types of Tumors are ER and PR 
-#positive. This suggests that 
+#positive. This suggests that that ER-positive and PR-positive statuses are dominant across all tumor 
+#stages, indicating that most breast cancer tumors rely on hormone receptors for growth regardless of stage. 
+#Since HER2 positivity is less frequent, tumor stage does not appear to be strongly associated with ER/PR/HER2 
+#status, but hormone receptor-positive tumors may be more common overall.
+
+
 
 
 

@@ -83,6 +83,28 @@ meal_country_counts["percentage"] = (meal_country_counts["count"] / total_countr
 print("\nMeal plan percentages within each country:")
 print(meal_country_counts.sort_values(by=["country", "percentage"], ascending=[True, False]).head(20))
 
+#Analysis 
+#The data reveals that BB (Bed and Breakfast) is the most popular meal plan across most countries, 
+#with high preferences such as 75.69% in Angola (AGO), 91.67% in Albania (ALB), and 74.77% in Argentina 
+#(ARG), indicating a widespread demand for basic meal packages. SC (Self-Catering) also holds a notable 
+#share in some regions, such as 50% in Aruba (ABW) and 37.5% in Armenia (ARM), highlighting a preference 
+#for flexibility in meal arrangements. In contrast, HB (Half Board) is significantly less popular, often 
+#accounting for a minimal share, such as 0.28% in Angola (AGO) and 1.96% in the United Arab Emirates (ARE),
+#suggesting it is not a common choice for travelers. Smaller countries like Anguilla (AIA) and 
+#Armenia (ARM) show unique patterns, with AIA exhibiting a 100% preference for BB, while ARM displays a 
+#more diverse distribution, reflecting either smaller sample sizes or distinct guest preferences.
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
