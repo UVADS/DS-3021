@@ -1,6 +1,6 @@
 #lab dataset 1 
 #basics:
-#clical_mod is my dataset 
+#clinical_mod is my dataset 
 #Age at Initial Pathologic Diagnosis is the variable name in the data set 
 #age group is a column heading that I have created 
 #age group counts stores the number of people within each age group 
@@ -8,11 +8,13 @@
 import pandas as pd 
 import numpy as np 
 
-clinical_mod = pd.read_csv("/Users/anayanath/rainbow/DS-3021-analytics/data/clinical_data_breast_cancer_modified.csv")
+clinical_mod = pd.read_csv("/workspaces/DS-3021-analytics-1/data/clinical_data_breast_cancer_modified.csv")
 print(clinical_mod)
+
 
 ##Question 1 : Is there a relationship between the age at initial pathologic diagnosis 
 #and the tumor stage or size in breast cancer patients?
+#question 1 type: Correlation 
 
 ##Pseudocode 1:
 #1-group by age groups: 
@@ -91,119 +93,84 @@ print(highest_tumor_per_age_group)
 #in tumor progression or detection in older patients, but overall, tumor stage does 
 #not appear to be significantly age-dependent.
 
-#background for my exploration in question 2 
-#If tumor stage is not correlated with the age at initial pathologic diagnosis, there
-#could be other variables that must be correlated with the stage of Tumor developed in the 
-#patient. It could be the quality of treatment patients recieve, patients lifestsyle, 
-#length of delay between initial diagnosis and a consistent treatment regimen and more. 
-#In this question, I want to explore the relationship between Tumor stage and 
 
-##Question  2: Is there an association between tumor stage and ER/PR/HER2-positive or
-# negative status.
+#Question 2 - redo 
+#Question 2 type: Group Difference Analysis 
+#Are there differences in the average overall survival time (OS Time) of 
+#patients based on AJCC stage? 
+#question type: comparative or group difference analysis 
 
-#After research I learnt that:
-#ER-positive means the tumor has estrogen receptors and might grow faster if 
-#estrogen is present.
-#PR-positive tumors also rely on hormone progesterone to grow.
-#HER2 is a protein that helps cells grow. In some cancers, there's too much HER2, 
-#making the tumor grow more aggressively.
+# Pseudocode:
+#1-group by AJCC stage 
+#2-calculate average overall survival time for each stage
+#3-calculate difference between average survival time between AJCC stages 
+#4-visually comparing average survival times across AJCC Stages 
 
-#pseudocode 2 
-#1-seperate ER,PR,HER2 positives and negatives together 
-#2-for each stage of tumor, count the number of ER,PR, HER positives 
-#3-for each stage of tumor, count the number of ER,PR, HER negatives 
-#4-For each stage of tumor, calculate which positive or negative version of the hormone is most 
-#frequent
-
-#step 1 -seperate ER,PR,HER2 positives and negatives together 
-ER_positive = clinical_mod[clinical_mod["ER Status"] == "Positive"]
-print(ER_positive)
-ER_negative = clinical_mod[clinical_mod["ER Status"] == "Negative"]
-print(ER_negative)
-PR_positive = clinical_mod[clinical_mod["ER Status"] == "Positive"]
-print(PR_positive)
-PR_negative = clinical_mod[clinical_mod["ER Status"] == "Negative"]
-print(ER_negative)
-HER2_positive = clinical_mod[clinical_mod["HER2 Final Status"] == "Positive"]
-print(HER2_positive)
-HER2_negative = clinical_mod[clinical_mod["HER2 Final Status"] == "Negative"]
-print(HER2_negative)
-
-#step 2 -for each stage of tumor, count the number of ER,PR, HER positives
-
-ER_positive_counts = ER_positive.groupby("Tumor")["ER Status"].count()
-PR_positive_counts = PR_positive.groupby("Tumor")["PR Status"].count()
-HER2_positive_counts = HER2_positive.groupby("Tumor")["HER2 Final Status"].count()
-# Print the counts for verification
-print(ER_positive_counts,PR_positive_counts,HER2_positive_counts)
-# Manually defining  positive counts for tumor stages from printed result
-ER_positive_counts = {"T1": 10, "T2": 39, "T3": 14, "T4": 5}
-PR_positive_counts = {"T1": 10, "T2": 39, "T3": 14, "T4": 5}
-HER2_positive_counts = {"T1": 4, "T2": 19, "T3": 4, "T4": 0}
-
-# Creating a DataFrame to store positive counts 
-data1 = {
-    "Tumor Stage": ["T1", "T2", "T3", "T4"],
-    "ER Positive": [ER_positive_counts.get(stage, 0) for stage in ["T1", "T2", "T3", "T4"]],
-    "PR Positive": [PR_positive_counts.get(stage, 0) for stage in ["T1", "T2", "T3", "T4"]],
-    "HER2 Positive": [HER2_positive_counts.get(stage, 0) for stage in ["T1", "T2", "T3", "T4"]],
-}
-# Converting the dictionary into a DataFrame
-results_df1 = pd.DataFrame(data1)
-
-# Displaying the table
-print(results_df1)
-
-#step 3 -for each stage of tumor, count the number of ER,PR, HER negatives 
-
-ER_negative_counts = ER_negative.groupby("Tumor")["ER Status"].count()
-PR_negative_counts = PR_negative.groupby("Tumor")["PR Status"].count()
-HER2_negative_counts = HER2_negative.groupby("Tumor")["HER2 Final Status"].count()
-
-# Print the counts for verification
-print(ER_negative_counts,PR_negative_counts,HER2_negative_counts)
-
-ER_positive_counts = {"T1": 5, "T2": 25, "T3": 5, "T4":1}
-PR_positive_counts = {"T1": 5, "T2": 25, "T3": 5, "T4": 1}
-HER2_positive_counts = {"T1": 11, "T2": 46, "T3": 14, "T4": 6}
-
-data2 = {
-    "Tumor Stage": ["T1", "T2", "T3", "T4"],
-    "ER Negative": [ER_negative_counts.get(stage, 0) for stage in ["T1", "T2", "T3", "T4"]],
-    "PR Negative": [PR_negative_counts.get(stage, 0) for stage in ["T1", "T2", "T3", "T4"]],
-    "HER2 Negative": [HER2_negative_counts.get(stage, 0) for stage in ["T1", "T2", "T3", "T4"]],
-}
-
-results_df2 = pd.DataFrame(data2)
-
-# Displaying the table
-print(results_df2)
-
-#step 4
-def compute_most_frequent_hormone(results_df1):
-    results_df1 = results_df1.copy()  #ensuring the original dataframe is unmodified 
-    results_df1["Most Frequent Hormone"] = results_df1[["ER Positive", "PR Positive", "HER2 Positive"]].apply(
-        lambda row: " & ".join(row.index[row == row.max()]), axis=1 #select the hormone with the highest count 
-    )
-    return results_df1
-
-# Running the function using results_df1
-final_results_df1 = compute_most_frequent_hormone(results_df1)
-# Displaying results
-print(final_results_df1)
+#step 1 group by AJCC stage 
+print(clinical_mod.info()) #this reveals the different data types of columns
+#changing AJCC stage to categorical variable
+#clinical_mod['AJCC Stage'] = clinical_mod['AJCC Stage'].astype("category")
+print(clinical_mod.info())
+x1 = clinical_mod.groupby('AJCC Stage', observed=True)
 
 
+#step 2-calculate average overall survival time for each stage
+deaths_sum = x1['OS event'].sum()
+tot_patients_count = x1['AJCC Stage'].count()
+mean_OS_time = x1['OS Time'].mean()
+
+#Assign these values using `.map()`
+clinical_mod = clinical_mod.assign(
+    deaths=clinical_mod['AJCC Stage'].map(deaths_sum),
+    tot_patients=clinical_mod['AJCC Stage'].map(tot_patients_count),
+    meanOSTime=clinical_mod['AJCC Stage'].map(mean_OS_time)
+)
 
 
-#Analysis- The results show that the most frequent hormone receptors  for all 4 types of Tumors are ER and PR 
-#positive. This suggests that that ER-positive and PR-positive statuses are dominant across all tumor 
-#stages, indicating that most breast cancer tumors rely on hormone receptors for growth regardless of stage. 
-#Since HER2 positivity is less frequent, tumor stage does not appear to be strongly associated with ER/PR/HER2 
-#status, but hormone receptor-positive tumors may be more common overall.
+clinical_mod = clinical_mod[['AJCC Stage', 'deaths', 'tot_patients', 'meanOSTime']]
 
+clinical_mod_subset = clinical_mod[1:5]
+clinical_mod_clean = clinical_mod.dropna()
+print(clinical_mod_clean.head(10))  # Data after dropping NaNs
 
+# Group by 'AJCC Stage' and compute mean values
+clinical_summary = clinical_mod_clean.groupby('AJCC Stage', observed=True, as_index=False).mean()
 
+# Display the cleaned dataset
+print(clinical_summary)
 
+#step 3 - calculate difference between average survival time between AJCC stages 
+# Sort by meanOS Time in descending order (highest survival time first)
+clinical_summary = clinical_summary.sort_values(by="AJCC Stage")
+
+# Calculate the difference in mean OS Time between consecutive stages
+clinical_summary['survival_time_diff'] = clinical_summary['meanOSTime'].diff(periods=-1)  # Show decrease
+
+# Display the cleaned and correctly ordered dataset
+print(clinical_summary)
+
+#step 4-printing the greatest differences between stages 
+def find_greatest_survival_difference(df):
+    max_idx = df['survival_time_diff'].abs().idxmax()
+    return df.loc[max_idx, ['AJCC Stage', 'survival_time_diff']].to_dict()
+
+# Run the function
+greatest_diff = find_greatest_survival_difference(clinical_summary)
+
+# Print result
+print(f"\n Greatest Difference in Survival Time: {greatest_diff['survival_time_diff']:.2f} days in **{greatest_diff['AJCC Stage']}**")
+
+#Analysis: 
+#The results indicate significant differences in OS Time across AJCC stages, confirming 
+#that disease progression impacts survival time.Stage I patients have the highest survival time (906.67 days), while Stage IIIB has the lowest (316.67 days), 
+#showing a sharp decline as cancer advances.The largest survival time drop (435.08 days) occurs between Stage 
+#IIIA and Stage IIIB, highlighting a critical transition point.
+#Interestingly, Stage IIB has a higher survival time than Stage III (961.7 vs. 562 days), suggesting possible treatment effects or 
+#sample size variations. Stage IV (802 days) has better survival than some lower stages, which 
+#might indicate advanced treatments extending survival even in late-stage cases.
+#Yes, there are significant differences in OS Time across AJCC stages. Survival time generally decreases with disease 
+#progression, with the most drastic declines occurring at later stages. Further analysis could explore treatment effects and patient 
+#characteristics influencing survival variations.
 
 
 
