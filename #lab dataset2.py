@@ -5,7 +5,6 @@ import numpy as np
 hotel_data = pd.read_csv("/workspaces/DS-3021-analytics-1/data/hotels.csv")
 print(hotel_data)
 
-
 ## Question 3:
 #Does a longer lead time cause a booking to be cancelled? In other words, does longer lead time increase the liklihood 
 #of a booking being cancelled. 
@@ -89,7 +88,7 @@ print(highest_canceled_lead_time_result)
 #question 4 type: Predictive modelling
 #I used this week's class learnings and sample code 
 
-#Pseudocode
+#Pseudocode:
 #1-Prepare the data by removing missing values and encoding categorical variables.
 #2-Split the dataset into predictors (X) and target variable (y).
 #3-Train a Linear Regression model to predict meal plans based on country.
@@ -130,76 +129,12 @@ mse = mean_squared_error(y_test, y_pred)
 print(f"Mean Squared Error: {mse:.2f}")
 
 
-#analysis:
-
-'''
-#printing unique values within meal to understand available categories
-print(hotel_data["meal"].unique())
-#Group the dataset by the "meal" column and count the number of occurrences for each meal type
-meal_counts = hotel_data.groupby("meal").size().reset_index(name="count")
-print(meal_counts)
-
-#step 2- group dataset by guests from each country 
-# Group the dataset by the "country" column and count the number of guests from each country
-country_counts = hotel_data.groupby("country").size().reset_index(name="count")
-print(country_counts)
-
-#step 3--within each country, compute the percentage of meal plans 
-# Group the dataset by country and meal plan, then count the number of bookings for each combi
-meal_country_counts = hotel_data.groupby(["country", "meal"]).size().reset_index(name="count")
-print(meal_country_counts)
-# Compute the total number of bookings per country
-total_country_counts = meal_country_counts.groupby("country")["count"].transform("sum")
-meal_country_counts["percentage"] = (meal_country_counts["count"] / total_country_counts) * 100
-print("\nMeal plan percentages within each country:")
-print(meal_country_counts.sort_values(by=["country", "percentage"], ascending=[True, False]).head(20))
-
-
-#step 4 -find the most common meal plan per country 
-def most_common_meal_plan(meal_country_counts):
-    most_common_meal = meal_country_counts.sort_values(by=["country", "percentage"], ascending=[True, False])\
-                                          .drop_duplicates(subset="country", keep="first")\
-                                          [["country", "meal", "percentage"]]
-    return most_common_meal
-
-most_common_meal_plan_result = most_common_meal_plan(meal_country_counts)
-print(most_common_meal_plan_result)
-
-
-"""
-    #Function to determine the most common meal plan for each country.
-
-    #Parameters:
-    #meal_country_counts (DataFrame): A DataFrame containing meal plan counts and percentages for each country.
-
-   # Returns:
-   # DataFrame: A DataFrame with each country listed once, showing its most frequently chosen meal plan and percentage.
-"""
-
-
-#Analysis: 
-#The data reveals that BB (Bed and Breakfast) is the most popular meal plan across most countries, 
-#with high preferences such as 75.69% in Angola (AGO), 91.67% in Albania (ALB), and 74.77% in Argentina 
-#(ARG), indicating a widespread demand for basic meal packages. SC (Self-Catering) also holds a notable 
-#share in some regions, such as 50% in Aruba (ABW) and 37.5% in Armenia (ARM), highlighting a preference 
-#for flexibility in meal arrangements. In contrast, HB (Half Board) is significantly less popular, often 
-#accounting for a minimal share, such as 0.28% in Angola (AGO) and 1.96% in the United Arab Emirates (ARE),
-#suggesting it is not a common choice for travelers. Smaller countries like Anguilla (AIA) and 
-#Armenia (ARM) show unique patterns, with AIA exhibiting a 100% preference for BB, while ARM displays a 
-#more diverse distribution, reflecting either smaller sample sizes or distinct guest preferences.
-
-
-
-
-
-
-
-'''
-
-
-
-
-
-
-
+#analysis:The Mean Squared Error (MSE) of 1.12 indicates that the model's 
+#predictions for meal plans based on a guest's country are not highly accurate. 
+#Since meal plan choices are categorical, Linear Regression may not be the best model for this problem, 
+#as it assumes a continuous relationship between the variables. The relatively high MSE suggests that 
+#a guest’s nationality alone is not a strong predictor of their meal plan preference, and other 
+#factors—such as trip purpose, group size, or booking channel—might influence meal choices more significantly. 
+#A better approach could involve classification models like Logistic Regression or Decision Trees which 
+#are more suitable for categorical predictions.
 
