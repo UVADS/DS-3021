@@ -245,4 +245,60 @@ print(427/(427+1279)) #its not the same as above - the small difference
 #distribution cause slight variations, especially with small sample sizes.
 print(Test["high_grad_rate_f"].value_counts())
 print(426/(426+1280))
+#The small difference occurs because stratified splitting preserves class proportions as closely as possible, 
+#but rounding errors and integer row distribution cause slight variations, especially with small sample sizes
+
+#The Train (0.2545), Tune (0.2503), and Test (0.2497) values are nearly the same, meaning stratification worked, but small differences happened because the split must assign whole rows
+
+#analysis:
+#I carefully preprocessed this dataset to develop a predictive model for university graduation rates (grad_100_value), 
+#addressing the research question: Can I predict which student characteristics are most strongly associated 
+#with a higher likelihood of graduating within four years? After transforming categorical variables, 
+#normalizing numerical data, and one-hot encoding, I converted the graduation rate into a binary classification problem (
+#(high_grad_rate_f), where universities in the top 25% graduation rates were labeled as 1 (high) and others 
+#as 0 (low). The prevalence of high graduation rates was consistent across Training (0.2545), Tuning (0.2503), 
+#and Test (0.2497) sets, confirming that stratification preserved class proportions, although minor rounding 
+#differences occurred due to integer row distribution.
+
+#These findings suggest that graduation rates are not randomly distributed but rather follow predictable 
+#patterns based on institutional characteristics such as cohort size, SAT percentiles, and control type 
+#(public/private). The modeling phase can now leverage this structured dataset to identify key predictors 
+#of student success, which can inform universities, policymakers, and investors about institutional 
+#performance and student outcomes. The next steps would involve training classification models (e.g., 
+#logistic regression, decision trees) to quantify the impact of these predictors and validate performance 
+#using the Tuning and Test sets
+
+#step 3 
+#My instincts tell me that the data provides valuable insights into factors affecting university 
+#graduation rates, but there are potential challenges. While key variables like cohort size, SAT 
+#percentiles, and control type are included, I’m concerned about missing values, potential biases 
+#in institutional reporting, and whether all relevant predictors are captured. The data is structured 
+#well for modeling, but further feature engineering and validation will be crucial to ensure reliable 
+#predictions. 
+
+#step 4:
+def train_pipeline(df, train_size=55, target_variable="high_grad_rate_f"):
+    """
+    Produces the Training dataset with a specified size, ensuring class balance through stratified sampling.
+    """
+    Train, _ = train_test_split(df, train_size=train_size, stratify=df[target_variable], random_state=42)
+    return Train
+
+def test_pipeline(df, test_size=65, target_variable="high_grad_rate_f"):
+    """
+    Produces the Test dataset with a specified size, ensuring class balance through stratified sampling.
+    """
+    _, Test = train_test_split(df, train_size=(len(df) - test_size), stratify=df[target_variable], random_state=42)
+    return Test
+
+# ✅ Example Usage:
+Train = train_pipeline(college_dt)
+Test = test_pipeline(college_dt)
+
+# Display dataset sizes
+print("Training Set Shape:", Train)
+print("Testing Set Shape:", Test)
+
+
+
 
