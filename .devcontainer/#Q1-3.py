@@ -40,7 +40,7 @@ dummy variable represents the difference in the dependent variable relative to t
 (when the dummy variable is 0).
 '''
 
-#Q1-3
+#Q0-3
 #Q1:
 ### part 1:
 import pandas as pd 
