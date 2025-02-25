@@ -1,0 +1,47 @@
+linear regression lab 
+Q0 - answers 
+1. A model is "linear" if the output (dependent variable) is a linear combination of the unknown parameters 
+(coefficients). This means the equation can be written as Y = β₀ + β₁X₁ + β₂X₂ + ... + βₙXₙ + ε, where each 
+term involves a coefficient multiplied by a predictor, but no coefficients are squared, multiplied together, 
+or inside functions like exponents or logarithms. The term "linear" refers to the linearity of parameters (β’s) appear 
+in the equation, not necessarily the variables (X’s).
+
+2- With an intercept, the dummy variable coefficient represents a difference from the baseline. This is because the category represented by 
+X=0 exists and its effect is absorbed into the intercept (β0) making the dummy variable coefficient (β1)
+measure the difference relative to that baseline. 
+Without an intercept, the coefficients represent the absolute values for each category separately.This is because 
+each category gets its own coefficient, and there is no baseline group to compare against—instead of measuring 
+differences, the model directly assigns predicted values to each category.
+
+3- Linear regression is not suited for classification because it predicts continuous values rather than 
+discrete class labels, making it unreliable for distinguishing between categories. It does not naturally 
+create decision boundaries or provide probability estimates, leading to overlapping and ambiguous predictions. 
+
+4- High training accuracy but low testing accuracy indicates overfitting, where the model memorizes specific 
+patterns within the training data instead of learning general patterns. This happens when the model is too 
+complex, capturing noise rather than meaningful relationships. A visible pattern in the residuals suggests the 
+model is not properly generalizing and may be missing key underlying trends.
+
+5- There are two ways to handle non-linear relationships in linear regression. The first is feature engineering, 
+where we create new features by adding polynomial terms (e.g.x^2, x^3) or interaction terms (e.g., x1 * x2). 
+This allows a linear model to fit curves while still remaining linear in how it estimates coefficients. For 
+example, instead of using y = β0 + β1x  we can use y=β0 + β1x + β2x^2 to better capture patterns in the data. 
+The second method is kernel-based techniques, such as Support Vector Regression (SVR) or Kernel Ridge Regression. 
+These models map the original features into a higher-dimensional space, where a simple linear model can find 
+complex patterns. Unlike feature engineering, kernel methods do this transformation automatically, without 
+manually creating polynomial terms. Both approaches help linear models handle non-linear relationships, but 
+one does it explicitly (feature engineering) while the other does it implicitly (kernels).
+
+6- The intercept represents the predicted value of the dependent variable when all independent variables are 
+zero. A slope coefficient shows how much the dependent variable changes for a one-unit increase in the 
+corresponding independent variable, assuming all other variables remain constant. The coefficient for a 
+dummy variable represents the difference in the dependent variable relative to the baseline category 
+(when the dummy variable is 0).
+
+
+
+
+
+
+
+
