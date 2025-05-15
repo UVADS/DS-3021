@@ -32,13 +32,13 @@ house_votes_Dem.groupby("party.labels").agg({"aye": "sum", "nay": "sum", "other"
 #%%
 # Step 2: run k-means
 clust_data_Dem = house_votes_Dem[["aye", "nay", "other"]]
-kmeans_obj_Dem = KMeans(n_clusters=2, random_state=1).fit(clust_data_Dem)
+kmeans_obj_Dem = KMeans(n_clusters=3, random_state=1).fit(clust_data_Dem)
 
 #%%
 #Take a look at the clustering results # explain each of these?
 #print(kmeans_obj_Dem.cluster_centers_) 
 #print(kmeans_obj_Dem.labels_)
-#print(kmeans_obj_Dem.inertia_)
+print(kmeans_obj_Dem.inertia_)
 
 
 #%%
