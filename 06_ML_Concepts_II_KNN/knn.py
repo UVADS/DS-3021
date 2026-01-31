@@ -34,6 +34,13 @@ from data_preparation import (prepare_bank_data, split_train_val_test,
 
 
 # ============================================================================
+# CONSTANTS
+# ============================================================================
+# Data source URL - can be easily changed to use different datasets
+DATA_URL = "https://raw.githubusercontent.com/UVADS/DS-3001/main/data/bank.csv"
+
+
+# ============================================================================
 # LOAD AND EXPLORE DATA
 # ============================================================================
 def load_and_explore_data():
@@ -52,9 +59,8 @@ def load_and_explore_data():
     print("LOADING AND EXPLORING DATA")
     print("=" * 80)
 
-    # Load data from GitHub repository
-    url = "https://raw.githubusercontent.com/UVADS/DS-3001/main/data/bank.csv"
-    bank_data = pd.read_csv(url)
+    # Load data from GitHub repository using the configured URL
+    bank_data = pd.read_csv(DATA_URL)
 
     # Display basic information about the dataset
     print("\nDataset Info:")
@@ -520,9 +526,13 @@ def main():
     X_test, y_test = prepare_features_and_target(test, 'signed up_1')
 
     # Step 6: Perform nested cross-validation
-    # This provides an unbiased estimate of model performance
+    # NOTE: We combine train+val for nested CV to maximize the data used
+    # for hyperparameter tuning while still maintaining an independent test
+    # set for final evaluation. The nested CV splits this combined data
+    # internally, so each fold gets its own training and validation data.
+    # The test set remains completely untouched until the very end.
     nested_cv_results = nested_cross_validation(
-        X=pd.concat([X_train, X_val]),  # Use train+val for outer CV
+        X=pd.concat([X_train, X_val]),  # Use train+val for nested CV
         y=np.concatenate([y_train, y_val]),
         k_range=range(1, 22, 2),
         outer_cv_folds=5,
@@ -530,9 +540,10 @@ def main():
         random_state=1984
     )
 
-    # Step 7: Train final model using standard approach
-    # Use training set for k selection, validate on validation set,
-    # and provide final evaluation on test set
+    # Step 7: Train final model using standard train/val/test approach
+    # This demonstrates an alternative workflow where we explicitly use
+    # the training set for k selection, validate on the validation set,
+    # and provide final evaluation on the test set.
     final_model, best_k = train_and_evaluate_final_model(
         X_train, y_train,
         X_val, y_val,
