@@ -12,6 +12,7 @@ Author: DS-3021 Course
 Date: 2024
 """
 
+# %%
 # ============================================================================
 # IMPORT LIBRARIES
 # ============================================================================
@@ -32,7 +33,7 @@ from sklearn.metrics import (confusion_matrix, ConfusionMatrixDisplay,
 from data_preparation import (prepare_bank_data, split_train_val_test,
                               prepare_features_and_target)
 
-
+# %%
 # ============================================================================
 # CONSTANTS
 # ============================================================================
@@ -81,6 +82,7 @@ def load_and_explore_data():
 
     return bank_data
 
+# %%
 
 # ============================================================================
 # CHECK FOR MISSING DATA
@@ -122,7 +124,7 @@ def check_missing_data(df):
 
     plt.show()
 
-
+# %%
 # ============================================================================
 # NESTED CROSS-VALIDATION FUNCTION
 # ============================================================================
@@ -254,6 +256,7 @@ def nested_cross_validation(X, y, k_range=range(1, 22, 2),
         'std_score': std_score
     }
 
+# %%
 
 # ============================================================================
 # TRAIN FINAL MODEL AND EVALUATE

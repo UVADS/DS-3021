@@ -226,7 +226,8 @@ def chooseK(k, X_train, y_train, X_test, y_test):
 #%%
 # REMEMBER: Python is end-exclusive; we want UP to 21 to we'll have to extend the end bound to include it
 test = pd.DataFrame({'k':list(range(1,22,2)), 
-                     'accu':[chooseK(i, X_train, y_train, X_test, y_test) for i in list(range(1, 22, 2))]})
+                     'accu':[chooseK(i, X_train, y_train, X_test, y_test) 
+                             for i in list(range(1, 22, 2))]})
 
 #%%
 print(test)
