@@ -19,7 +19,7 @@ if needed changed the target variable.
 and test probabilities of the positive class.
 
 4. No code question: If you adjusted the k hyperparameter what do you think would
-happen to the threshold function? Would the confusion look the same at the same threshold 
+happen to the threshold function? Would the confusion matrix look the same at the same threshold 
 levels or not? Why or why not?
 
 5. Evaluate the results using the confusion matrix. Then "walk" through your question, summarize what 
@@ -97,3 +97,4 @@ sns.displot(
     multiple="fill",
     aspect=1.25
 )
+
